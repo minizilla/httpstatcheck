@@ -7,13 +7,13 @@ Package httpstatcheck provides wildcard HTTP Status Code checking, e.g. 200 == 2
 ```go
 var checker httpstatcheck.Checker // The zero value for Checker is an empty rule checker ready to use.
 checker.Insert("2XX", "400", "500", "3X1")
-fmt.Println(checker.Check(http.StatusOK) // true
-fmt.Println(checker.Check(http.StatusCreated)) // true
-fmt.Println(checker.Check(http.StatusBadRequest)) // true
-fmt.Println(checker.Check(http.StatusUnauthorized)) // false
-fmt.Println(checker.Check(http.StatusInternalServerError)) // true
-fmt.Println(checker.Check(http.StatusNotImplemented)) // false
-fmt.Println(checker.Check(http.StatusMultipleChoices)) // true 3X1 will be considered as 3XX
+checker.Check(200) // true
+checker.Check(201) // true
+checker.Check(400) // true
+checker.Check(401) // false
+checker.Check(500) // true
+checker.Check(501) // false
+checker.Check(300) // true 3X1 will be considered as 3XX
 ```
 
 ## Benchmark with regex

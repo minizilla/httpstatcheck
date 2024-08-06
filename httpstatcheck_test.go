@@ -2,7 +2,6 @@ package httpstatcheck_test
 
 import (
 	"fmt"
-	"net/http"
 	"regexp"
 	"testing"
 
@@ -66,13 +65,13 @@ func BenchmarkRegex(b *testing.B) {
 func ExampleChecker() {
 	var checker httpstatcheck.Checker
 	checker.Insert("2XX", "400", "500", "3X1")
-	fmt.Println(checker.Check(http.StatusOK))
-	fmt.Println(checker.Check(http.StatusCreated))
-	fmt.Println(checker.Check(http.StatusBadRequest))
-	fmt.Println(checker.Check(http.StatusUnauthorized))
-	fmt.Println(checker.Check(http.StatusInternalServerError))
-	fmt.Println(checker.Check(http.StatusNotImplemented))
-	fmt.Println(checker.Check(http.StatusMultipleChoices), "3X1 will be considered as 3XX")
+	fmt.Println(checker.Check(200))
+	fmt.Println(checker.Check(201))
+	fmt.Println(checker.Check(400))
+	fmt.Println(checker.Check(401))
+	fmt.Println(checker.Check(500))
+	fmt.Println(checker.Check(501))
+	fmt.Println(checker.Check(300), "3X1 will be considered as 3XX")
 	// Output:
 	// true
 	// true
