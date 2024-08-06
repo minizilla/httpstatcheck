@@ -3,6 +3,7 @@ package httpstatcheck_test
 import (
 	"fmt"
 	"net/http"
+	"regexp"
 	"testing"
 
 	"github.com/minizilla/httpstatcheck"
@@ -40,6 +41,25 @@ func testChecker(match bool, statusCode int, rules ...string) func(t *testing.T)
 		}
 		gotMatch := checker.Check(statusCode)
 		testr.New(t).Equal(gotMatch, match)
+	}
+}
+
+func BenchmarkHTTPStatCheck(b *testing.B) {
+	var checker httpstatcheck.Checker
+	checker.Insert("2XX")
+	assert := testr.New(b)
+	for i := 0; i < b.N; i++ {
+		match := checker.Check(200)
+		assert.Equal(match, true)
+	}
+}
+
+func BenchmarkRegex(b *testing.B) {
+	regex := regexp.MustCompile(`^2\d{2}$`)
+	assert := testr.New(b)
+	for i := 0; i < b.N; i++ {
+		match := regex.MatchString("200")
+		assert.Equal(match, true)
 	}
 }
 
