@@ -1,6 +1,8 @@
 package httpstatcheck_test
 
 import (
+	"fmt"
+	"net/http"
 	"testing"
 
 	"github.com/minizilla/httpstatcheck"
@@ -39,4 +41,24 @@ func testChecker(match bool, statusCode int, rules ...string) func(t *testing.T)
 		gotMatch := checker.Check(statusCode)
 		testr.New(t).Equal(gotMatch, match)
 	}
+}
+
+func ExampleChecker() {
+	var checker httpstatcheck.Checker
+	checker.Insert("2XX", "400", "500", "3X1")
+	fmt.Println(checker.Check(http.StatusOK))
+	fmt.Println(checker.Check(http.StatusCreated))
+	fmt.Println(checker.Check(http.StatusBadRequest))
+	fmt.Println(checker.Check(http.StatusUnauthorized))
+	fmt.Println(checker.Check(http.StatusInternalServerError))
+	fmt.Println(checker.Check(http.StatusNotImplemented))
+	fmt.Println(checker.Check(http.StatusMultipleChoices), "3X1 will be considered as 3XX")
+	// Output:
+	// true
+	// true
+	// true
+	// false
+	// true
+	// false
+	// true 3X1 will be considered as 3XX
 }
