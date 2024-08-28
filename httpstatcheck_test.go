@@ -81,3 +81,19 @@ func ExampleChecker() {
 	// false
 	// true 3X1 will be considered as 3XX
 }
+
+func TestIsEmpty(t *testing.T) {
+	is := testr.New(t)
+
+	var checker httpstatcheck.Checker
+	is.Equal(checker.IsEmpty(), true, testr.WithMessage("IsEmpty before insert"))
+
+	checker.Insert()
+	is.Equal(checker.IsEmpty(), true, testr.WithMessage("IsEmpty after insert empty"))
+
+	checker.Check(200)
+	is.Equal(checker.IsEmpty(), true, testr.WithMessage("IsEmpty after check against empty rules"))
+
+	checker.Insert("2XX")
+	is.Equal(checker.IsEmpty(), false, testr.WithMessage("IsEmpty after insert"))
+}

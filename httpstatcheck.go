@@ -19,6 +19,10 @@ type Checker struct {
 //   - Any rules that contains non digits or wildcard will be ignored, e.g. 200 != "2NN".
 //   - Digits after wildcard will considered as wildcard, e.g. 200 == "2X1".
 func (c *Checker) Insert(rules ...string) {
+	if len(rules) == 0 {
+		return
+	}
+
 	if c.root == nil {
 		c.root = &node{}
 	}
@@ -54,7 +58,7 @@ func (c *Checker) Insert(rules ...string) {
 // Returns true if the status code is matched with the rules.
 func (c *Checker) Check(statusCode int) bool {
 	if c.root == nil {
-		c.root = &node{}
+		return false
 	}
 
 	code := strconv.Itoa(statusCode)
@@ -91,4 +95,9 @@ func charToIndex(char rune) (index int, isWildcard bool, isValid bool) {
 		return 0, true, true
 	}
 	return 0, false, false
+}
+
+// IsEmpty checks whether the checker contains a rules.
+func (c *Checker) IsEmpty() bool {
+	return c.root == nil
 }
